@@ -34,8 +34,9 @@ public class RenderCatapult extends Render {
 	public void doRender(Entity entity, double x, double y, double z, float yaw, float partialTick) {
 		GL11.glPushMatrix();
 		GL11.glTranslated(x, y, z);	
-		GL11.glScalef(0.5F, 0.5F, 0.5F);
+//		GL11.glScalef(0.5F, 0.5F, 0.5F);
 		GL11.glRotated(180, 0, 1, 0);
+		GL11.glScalef(2F, 2F, 2F);
 		bindTexture(getEntityTexture(entity));
 		model.render(entity, 0, 0, 0, 0, 0, 0.0625F);
 		GL11.glPopMatrix();
