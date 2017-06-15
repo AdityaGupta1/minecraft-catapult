@@ -17,8 +17,8 @@ public class Main
     public void init(FMLInitializationEvent event)
     {
     	registerModEntity(EntityCatapult.class, new RenderCatapult(),
-				"skeletoncow", EntityRegistry.findGlobalUniqueEntityId(),
-				0xEBEBD5, 0xC9C9A7);
+				"catapult", EntityRegistry.findGlobalUniqueEntityId(),
+				0xC38751, 0xDCA556);
     }
     
     public void registerModEntity(Class parEntityClass, Render render,

@@ -30,7 +30,7 @@ public class CommandCatapult implements ICommand {
 
 	@Override
 	public String getCommandUsage(ICommandSender p_71518_1_) {
-		return "/catapult";
+		return "/catapult <angle> <power>";
 	}
 
 	@Override

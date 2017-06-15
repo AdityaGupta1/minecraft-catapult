@@ -58,18 +58,13 @@ public class EntityCatapult extends EntityCow {
 		int amountToDrop = this.getRNG().nextInt(3);
 
 		for (int i = 0; i < amountToDrop; i++) {
-			if (this.isBurning()) {
-				// charcoal
-				this.dropItem(new ItemStack(Items.coal, 1, 1).getItem(), 1);
-			} else {
-				this.dropItem(Item.getItemFromBlock(Blocks.log), 1);
-			}
+			this.dropItem(Item.getItemFromBlock(Blocks.log), 1);
 		}
 	}
 
-	public boolean interact(EntityPlayer player)
-    {
-		player.addChatComponentMessage(new ChatComponentText(EnumChatFormatting.AQUA + "" + EnumChatFormatting.BOLD + "catapult"));
+	public boolean interact(EntityPlayer player) {
+		player.addChatComponentMessage(
+				new ChatComponentText(EnumChatFormatting.AQUA + "" + EnumChatFormatting.BOLD + "catapult"));
 		return true;
-    }
+	}
 }
