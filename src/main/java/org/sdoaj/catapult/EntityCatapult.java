@@ -4,7 +4,6 @@ import javax.vecmath.Vector3d;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.item.EntityFallingBlock;
 import net.minecraft.entity.passive.EntityCow;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -81,19 +80,15 @@ public class EntityCatapult extends EntityCow {
 		player.addChatComponentMessage(
 				new ChatComponentText(EnumChatFormatting.AQUA + "" + EnumChatFormatting.BOLD + "Launching cow..."));
 		
-		EntityFallingBlock block = new EntityFallingBlock(world, this.posX, this.posY, this.posZ, Blocks.air);
+		EntityCow cow = new EntityCow(world);
+		cow.setLocationAndAngles(this.posX, this.posY, this.posZ, 0, 0);
 		
 		Vector3d initialVector = new Vector3d(Math.cos(Math.toRadians(angle)) * power, Math.sin(Math.toRadians(angle)) * power, Math.cos(Math.toRadians(angle)) * power);
 //		Vector3d multiplyVector = new Vector3d();
 		Vector3d multiplyVector = new Vector3d(0, 1, -1);
 		Vector3d velocity = multiplyVectors(initialVector, multiplyVector);
-		block.setVelocity(velocity.x, velocity.y, velocity.z);
+		cow.setVelocity(velocity.x, velocity.y, velocity.z);
 		
-		EntityCow cow = new EntityCow(world);
-		cow.setLocationAndAngles(block.posX, block.posY, block.posZ, 0, 0);
-		block.riddenByEntity = cow;
-		
-		world.spawnEntityInWorld(block);
 		world.spawnEntityInWorld(cow);
 		
 		return true;
