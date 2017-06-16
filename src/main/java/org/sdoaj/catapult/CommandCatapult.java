@@ -12,7 +12,7 @@ import net.minecraft.world.World;
 
 public class CommandCatapult implements ICommand {
 	private List aliases = new ArrayList();
-	
+
 	public CommandCatapult() {
 		aliases.add("catapult");
 		aliases.add("cp");
@@ -39,10 +39,16 @@ public class CommandCatapult implements ICommand {
 	}
 
 	@Override
-	public void processCommand(ICommandSender sender, String[] p_71515_2_) {
-		sender.addChatMessage(new ChatComponentText(EnumChatFormatting.AQUA + "" + EnumChatFormatting.BOLD + "dank memes are dank"));
+	public void processCommand(ICommandSender sender, String[] args) {
+		Main.angle = Double.parseDouble(args[0]);
+		Main.power = Double.parseDouble(args[1]);
 		
-		World world = sender.getEntityWorld();
+		if (!Main.parametersSet) {
+			Main.parametersSet = true;
+		}
+
+		sender.addChatMessage(new ChatComponentText(EnumChatFormatting.AQUA + "" + EnumChatFormatting.BOLD
+				+ "Angle: " + Main.angle + " degrees, Power: " + Main.power));
 	}
 
 	@Override

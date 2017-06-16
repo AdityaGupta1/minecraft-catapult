@@ -1,14 +1,14 @@
 package org.sdoaj.catapult;
 
+import javax.vecmath.Vector3d;
+
 import net.minecraft.block.Block;
-import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.item.EntityFallingBlock;
 import net.minecraft.entity.passive.EntityCow;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
@@ -16,7 +16,7 @@ import net.minecraft.world.World;
 public class EntityCatapult extends EntityCow {
 	public EntityCatapult(World world) {
 		super(world);
-		this.setSize(0.9F, 1.3F);
+		this.setSize(2F, 1.5F);
 	}
 
 	public boolean isAIEnabled() {
@@ -61,10 +61,45 @@ public class EntityCatapult extends EntityCow {
 			this.dropItem(Item.getItemFromBlock(Blocks.log), 1);
 		}
 	}
-
+	
 	public boolean interact(EntityPlayer player) {
+		World world = player.getEntityWorld();
+		
+		double angle = Main.angle;
+		double power = Main.power;
+		
+		if (!Main.parametersSet) {
+			player.addChatComponentMessage(
+					new ChatComponentText(EnumChatFormatting.DARK_RED + "" + EnumChatFormatting.BOLD + "Use \"/catapult <angle> <power>\" first!"));
+			return false;
+		}
+		
+		if (!world.isRemote) {
+			return false;
+		}
+		
 		player.addChatComponentMessage(
-				new ChatComponentText(EnumChatFormatting.AQUA + "" + EnumChatFormatting.BOLD + "catapult"));
+				new ChatComponentText(EnumChatFormatting.AQUA + "" + EnumChatFormatting.BOLD + "Launching cow..."));
+		
+		EntityFallingBlock block = new EntityFallingBlock(world, this.posX, this.posY, this.posZ, Blocks.air);
+		
+		Vector3d initialVector = new Vector3d(Math.cos(Math.toRadians(angle)) * power, Math.sin(Math.toRadians(angle)) * power, Math.cos(Math.toRadians(angle)) * power);
+//		Vector3d multiplyVector = new Vector3d();
+		Vector3d multiplyVector = new Vector3d(0, 1, -1);
+		Vector3d velocity = multiplyVectors(initialVector, multiplyVector);
+		block.setVelocity(velocity.x, velocity.y, velocity.z);
+		
+		EntityCow cow = new EntityCow(world);
+		cow.setLocationAndAngles(block.posX, block.posY, block.posZ, 0, 0);
+		block.riddenByEntity = cow;
+		
+		world.spawnEntityInWorld(block);
+		world.spawnEntityInWorld(cow);
+		
 		return true;
+	}
+	
+	private Vector3d multiplyVectors(Vector3d vector1, Vector3d vector2) {
+		return new Vector3d(vector1.x * vector2.x, vector1.y * vector2.y, vector1.z * vector2.z);
 	}
 }

@@ -4,6 +4,7 @@ import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import net.minecraft.client.renderer.entity.Render;
 
@@ -12,6 +13,11 @@ public class Main
 {
     public static final String MODID = "catapult";
     public static final String VERSION = "1.0";
+    
+    public static double angle = 0D;
+    public static double power = 0D;
+    
+    public static boolean parametersSet = false;
     
     @EventHandler
     public void init(FMLInitializationEvent event)
@@ -30,5 +36,10 @@ public class Main
 				entityId, this, 80, 1, false);
 		RenderingRegistry
 				.registerEntityRenderingHandler(parEntityClass, render);
+	}
+    
+    @EventHandler
+	public void registerCommands(FMLServerStartingEvent event) {
+		event.registerServerCommand(new CommandCatapult());
 	}
 }
