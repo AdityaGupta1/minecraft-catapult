@@ -40,15 +40,31 @@ public class CommandCatapult implements ICommand {
 
 	@Override
 	public void processCommand(ICommandSender sender, String[] args) {
-		Main.angle = Double.parseDouble(args[0]);
-		Main.power = Double.parseDouble(args[1]);
+		if (args.length != 2) {
+			sender.addChatMessage(
+					new ChatComponentText(Main.redText + "Invalid arguments! Specify the angle and power as "
+							+ Main.redText + "decimal numbers using \"" + getCommandUsage(sender) + "\"."));
+			return;
+		}
 		
+		try {
+			Main.angle = Double.parseDouble(args[0]);
+			Main.power = Double.parseDouble(args[1]);
+		} catch (NumberFormatException exception) {
+			// 2x Main.redText because the second line of the chat message is
+			// not colored otherwise
+			sender.addChatMessage(
+					new ChatComponentText(Main.redText + "Invalid arguments! Specify the angle and power as "
+							+ Main.redText + "decimal numbers using \"" + getCommandUsage(sender) + "\"."));
+			return;
+		}
+
 		if (!Main.parametersSet) {
 			Main.parametersSet = true;
 		}
 
-		sender.addChatMessage(new ChatComponentText(EnumChatFormatting.AQUA + "" + EnumChatFormatting.BOLD
-				+ "Angle: " + Main.angle + " degrees, Power: " + Main.power));
+		sender.addChatMessage(new ChatComponentText(EnumChatFormatting.AQUA + "" + EnumChatFormatting.BOLD + "Angle: "
+				+ Main.angle + " degrees, Power: " + Main.power));
 	}
 
 	@Override

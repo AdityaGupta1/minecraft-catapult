@@ -7,6 +7,7 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.MinecraftForge;
 
 @Mod(modid = Main.MODID, version = Main.VERSION)
@@ -19,6 +20,9 @@ public class Main
     public static double power = 0D;
     
     public static boolean parametersSet = false;
+    
+    public static String aquaText = EnumChatFormatting.AQUA + "" + EnumChatFormatting.BOLD;
+    public static String redText = EnumChatFormatting.RED + "" + EnumChatFormatting.BOLD;
     
     @EventHandler
     public void init(FMLInitializationEvent event)

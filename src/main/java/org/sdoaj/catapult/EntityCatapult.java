@@ -97,8 +97,7 @@ public class EntityCatapult extends EntityAnimal {
 		double power = Main.power;
 
 		if (!Main.parametersSet) {
-			player.addChatComponentMessage(new ChatComponentText(EnumChatFormatting.DARK_RED + ""
-					+ EnumChatFormatting.BOLD + "Use \"/catapult <angle> <power>\" first!"));
+			player.addChatComponentMessage(new ChatComponentText(Main.redText + "Use \"/catapult <angle> <power>\" first!"));
 			return false;
 		}
 
@@ -107,7 +106,7 @@ public class EntityCatapult extends EntityAnimal {
 		}
 
 		player.addChatComponentMessage(
-				new ChatComponentText(EnumChatFormatting.AQUA + "" + EnumChatFormatting.BOLD + "Launching cow..."));
+				new ChatComponentText(Main.aquaText + "Launching cow..."));
 
 		EntityCow cow = new EntityCow(world);
 		cow.setLocationAndAngles(this.posX, this.posY, this.posZ, 0, 0);
