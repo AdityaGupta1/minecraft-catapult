@@ -96,6 +96,11 @@ public class EntityCatapult extends EntityAnimal {
 			this.dropItem(Item.getItemFromBlock(Blocks.log), 1);
 		}
 	}
+	
+	public void onLivingUpdate() {
+		super.onLivingUpdate();
+		this.setPosition(this.lastTickPosX, this.lastTickPosY, this.lastTickPosZ);
+	}
 
 	public boolean interact(EntityPlayer player) {
 		World world = player.getEntityWorld();
