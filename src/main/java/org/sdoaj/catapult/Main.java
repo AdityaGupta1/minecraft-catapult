@@ -7,6 +7,7 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import net.minecraft.client.renderer.entity.Render;
+import net.minecraftforge.common.MinecraftForge;
 
 @Mod(modid = Main.MODID, version = Main.VERSION)
 public class Main
@@ -25,6 +26,8 @@ public class Main
     	registerModEntity(EntityCatapult.class, new RenderCatapult(),
 				"catapult", EntityRegistry.findGlobalUniqueEntityId(),
 				0xC38751, 0xDCA556);
+    	
+    	MinecraftForge.EVENT_BUS.register(new FallingBlockEventHandler());
     }
     
     public void registerModEntity(Class parEntityClass, Render render,

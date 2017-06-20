@@ -76,6 +76,11 @@ public class EntityCatapult extends EntityAnimal {
 		return null;
 	}
 
+	@Override
+	public EntityAgeable createChild(EntityAgeable p_90011_1_) {
+		return null;
+	}
+
 	protected void dropFewItems(boolean p_70628_1_, int p_70628_2_) {
 
 		int amountToDrop = this.getRNG().nextInt(3);
@@ -121,10 +126,5 @@ public class EntityCatapult extends EntityAnimal {
 		world.spawnEntityInWorld(cow);
 
 		return true;
-	}
-
-	@Override
-	public EntityAgeable createChild(EntityAgeable p_90011_1_) {
-		return null;
 	}
 }

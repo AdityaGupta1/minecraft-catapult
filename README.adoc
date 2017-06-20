@@ -54,7 +54,7 @@ This is a very important step as this will confirm that you can actually start m
 == Using the Catapult
 
 . Click on the green play button at the top of Eclipse to launch Minecraft
-. In the game, make sure to create a world in `creative mode`
+. In the game, make sure to create a world in `Creative Mode`
 . In the game, open your inventory by pressing `E`
 . Click on the compass at the top-right to enter search mode
 . Search for `Spawn Catapult`
