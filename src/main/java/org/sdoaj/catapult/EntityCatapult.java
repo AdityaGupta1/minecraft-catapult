@@ -7,19 +7,18 @@ import javax.vecmath.Vector3d;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityAgeable;
+import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.item.EntityFallingBlock;
-import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityCow;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 
-public class EntityCatapult extends EntityAnimal {
+public class EntityCatapult extends EntityCreature {
 	List<Block> blocks = Arrays
 			.asList(new Block[] { Blocks.diamond_block, Blocks.gold_block, Blocks.iron_block, Blocks.emerald_block });
 
@@ -80,12 +79,7 @@ public class EntityCatapult extends EntityAnimal {
 
 	@Override
 	public ItemStack[] getLastActiveItems() {
-		return null;
-	}
-
-	@Override
-	public EntityAgeable createChild(EntityAgeable p_90011_1_) {
-		return null;
+		return new ItemStack[]{};
 	}
 
 	protected void dropFewItems(boolean p_70628_1_, int p_70628_2_) {
