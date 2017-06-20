@@ -27,6 +27,13 @@ public class EntityCatapult extends EntityAnimal {
 		super(world);
 		this.setSize(2F, 1.5F);
 	}
+	
+	protected void applyEntityAttributes()
+    {
+        super.applyEntityAttributes();
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(6.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0D);
+    }
 
 	public boolean isAIEnabled() {
 		return false;
