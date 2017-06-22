@@ -1,4 +1,4 @@
-package org.sdoaj.catapult;
+package org.aditya.catapult;
 
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.Mod;

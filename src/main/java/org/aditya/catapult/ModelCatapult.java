@@ -1,4 +1,4 @@
-package org.sdoaj.catapult;
+package org.aditya.catapult;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

@@ -1,29 +1,25 @@
-package org.sdoaj.catapult;
+package org.aditya.catapult;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityFallingBlock;
-import net.minecraft.entity.passive.EntityCow;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 
 public class FallingBlockEventHandler {
 	
 	@SubscribeEvent
 	public void immobilizeFallingBlock(LivingUpdateEvent event) {
-		if (!(event.entity instanceof EntityCow)) {
+		Entity entity = event.entity;
+		
+		if (!entity.isRiding()) {
 			return;
 		}
 		
-		EntityCow cow = (EntityCow) event.entity;
-		
-		if (!cow.isRiding()) {
+		if (!(entity.ridingEntity instanceof EntityFallingBlock)) {
 			return;
 		}
 		
-		if (!(cow.ridingEntity instanceof EntityFallingBlock)) {
-			return;
-		}
-		
-		EntityFallingBlock block = (EntityFallingBlock) cow.ridingEntity;
+		EntityFallingBlock block = (EntityFallingBlock) entity.ridingEntity;
 		
 		if (!block.onGround) {
 			return;

@@ -1,4 +1,4 @@
-package org.sdoaj.catapult;
+package org.aditya.catapult;
 
 import java.util.Arrays;
 import java.util.List;
@@ -6,7 +6,6 @@ import java.util.List;
 import javax.vecmath.Vector3d;
 
 import net.minecraft.block.Block;
-import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.item.EntityFallingBlock;

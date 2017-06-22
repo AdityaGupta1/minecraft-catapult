@@ -1,4 +1,4 @@
-package org.sdoaj.catapult;
+package org.aditya.catapult;
 
 import org.lwjgl.opengl.GL11;
 

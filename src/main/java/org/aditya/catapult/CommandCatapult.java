@@ -1,4 +1,4 @@
-package org.sdoaj.catapult;
+package org.aditya.catapult;
 
 import java.util.ArrayList;
 import java.util.List;
