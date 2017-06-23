@@ -1,4 +1,4 @@
-package org.aditya.catapult;
+package org.aditya.catapult.util;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.entity.Entity;

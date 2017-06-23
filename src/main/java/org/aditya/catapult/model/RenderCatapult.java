@@ -1,5 +1,6 @@
-package org.aditya.catapult;
+package org.aditya.catapult.model;
 
+import org.aditya.catapult.entity.EntityCatapult;
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;

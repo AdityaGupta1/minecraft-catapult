@@ -1,4 +1,6 @@
-package org.aditya.catapult;
+package org.aditya.catapult.model;
+
+import org.aditya.catapult.entity.EntityCatapult;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

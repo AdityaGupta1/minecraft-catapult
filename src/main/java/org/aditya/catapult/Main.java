@@ -1,5 +1,13 @@
 package org.aditya.catapult;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.aditya.catapult.entity.EntityCatapult;
+import org.aditya.catapult.model.RenderCatapult;
+import org.aditya.catapult.util.ColorBlock;
+import org.aditya.catapult.util.FallingBlockEventHandler;
+
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -7,6 +15,8 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.init.Blocks;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -18,11 +28,13 @@ public class Main
     
     public static double angle = 0D;
     public static double power = 0D;
+    // power shown to user, log base 3 not applied yet
+    public static double shownPower = 0D;
+    public static String color = "white";
     
     public static boolean parametersSet = false;
     
-    public static String aquaText = EnumChatFormatting.AQUA + "" + EnumChatFormatting.BOLD;
-    public static String redText = EnumChatFormatting.RED + "" + EnumChatFormatting.BOLD;
+    public static Map<String, ColorBlock> colors = new HashMap<>();
     
     @EventHandler
     public void init(FMLInitializationEvent event)
@@ -32,6 +44,15 @@ public class Main
 				0xC38751, 0xDCA556);
     	
     	MinecraftForge.EVENT_BUS.register(new FallingBlockEventHandler());
+		
+		colors.put("red", new ColorBlock(0xFF0000, Blocks.redstone_block));
+		colors.put("green", new ColorBlock(0x00FF00, Blocks.emerald_block));
+		colors.put("blue", new ColorBlock(0x0000FF, Blocks.lapis_block));
+		colors.put("cyan", new ColorBlock(0x00FFFF, Blocks.diamond_block));
+		colors.put("yellow", new ColorBlock(0xFFFF00, Blocks.gold_block));
+		colors.put("purple", new ColorBlock(0xFF00FF, Blocks.portal));
+		colors.put("white", new ColorBlock(0xFFFFFF, Blocks.quartz_block));
+		colors.put("black", new ColorBlock(0x000000, Blocks.obsidian));
     }
     
     public void registerModEntity(Class parEntityClass, Render render,
@@ -49,4 +70,15 @@ public class Main
 	public void registerCommands(FMLServerStartingEvent event) {
 		event.registerServerCommand(new CommandCatapult());
 	}
+    
+    public static ColorBlock getColorBlock() {
+    	return colors.get(color);
+    }
+    
+    public static ChatComponentText createChatMessage(String text, EnumChatFormatting color) {
+    	ChatComponentText chat = new ChatComponentText(text);
+    	chat.getChatStyle().setColor(color);
+    	chat.getChatStyle().setBold(true);
+    	return chat;
+    }
 }

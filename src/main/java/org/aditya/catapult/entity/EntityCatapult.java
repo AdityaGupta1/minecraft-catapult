@@ -1,11 +1,14 @@
-package org.aditya.catapult;
+package org.aditya.catapult.entity;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.vecmath.Vector2d;
 import javax.vecmath.Vector3d;
+
+import org.aditya.catapult.CommandCatapult;
+import org.aditya.catapult.Main;
+import org.aditya.catapult.util.Trajectory;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityCreature;
@@ -17,10 +20,11 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 
 public class EntityCatapult extends EntityCreature {
+
 	public EntityCatapult(World world) {
 		super(world);
 		this.setSize(2F, 1.5F);
@@ -89,17 +93,15 @@ public class EntityCatapult extends EntityCreature {
 		}
 	}
 
-	List<Block> blocks = Arrays
-			.asList(new Block[] { Blocks.diamond_block, Blocks.gold_block, Blocks.iron_block, Blocks.emerald_block });
-
-	private List<Vector2d> trajectories = new ArrayList<>();
+	private List<Trajectory> trajectories = new ArrayList<>();
 
 	public void onLivingUpdate() {
 		super.onLivingUpdate();
 		this.setPosition(this.lastTickPosX, this.lastTickPosY, this.lastTickPosZ);
 
-		for (Vector2d trajectory : trajectories) {
-			this.worldObj.spawnEntityInWorld(createBlock(trajectory.x, trajectory.y, true));
+		for (Trajectory trajectory : trajectories) {
+			this.worldObj.spawnEntityInWorld(
+					createBlock(trajectory.getAngle(), trajectory.getPower(), true, trajectory.getColor()));
 		}
 	}
 
@@ -114,32 +116,32 @@ public class EntityCatapult extends EntityCreature {
 		double power = Main.power;
 
 		if (!Main.parametersSet) {
-			player.addChatComponentMessage(
-					new ChatComponentText(Main.redText + "Use \"/catapult <angle> <power>\" first!"));
+			player.addChatComponentMessage(Main.createChatMessage(
+					"Use " + new CommandCatapult().getCommandUsage(null) + " first!", EnumChatFormatting.RED));
 			return false;
 		}
-		
+
 		if (player.getHeldItem() != null && player.getHeldItem().getItem() instanceof ItemSword) {
 			clearTrajectories();
-			player.addChatComponentMessage(new ChatComponentText(Main.aquaText + "Cleared all trajectories."));
+			player.addChatComponentMessage(Main.createChatMessage("Cleared all trajectories", EnumChatFormatting.AQUA));
 			return true;
 		}
 
 		if (player.isSneaking()) {
-			if (trajectories.contains(new Vector2d(angle, power))) {
+			if (trajectories.contains(new Trajectory(angle, power, Main.getColorBlock().getColor()))) {
 				player.addChatComponentMessage(
-						new ChatComponentText(Main.redText + "This trajectory is already being shown!"));
+						Main.createChatMessage("This trajectory is already being shown!", EnumChatFormatting.RED));
 				return false;
 			}
 
-			trajectories.add(new Vector2d(angle, power));
-			player.addChatComponentMessage(new ChatComponentText(Main.aquaText + "Added a trajectory at Angle: " + angle
-					+ ", Power: " + Math.round(Math.pow(3, Main.power))));
+			trajectories.add(new Trajectory(angle, power, Main.getColorBlock().getColor()));
+			player.addChatComponentMessage(Main.createChatMessage("Added a trajectory with Angle: " + angle
+					+ " degrees, Power: " + Main.shownPower + ", Color: " + Main.color, EnumChatFormatting.AQUA));
 
 			return true;
 		}
 
-		player.addChatComponentMessage(new ChatComponentText(Main.aquaText + "Launching cow..."));
+		player.addChatComponentMessage(Main.createChatMessage("Launching cow...", EnumChatFormatting.AQUA));
 
 		EntityCow cow = new EntityCow(world);
 		cow.setLocationAndAngles(this.posX, this.posY, this.posZ, 0, 0);
@@ -155,19 +157,20 @@ public class EntityCatapult extends EntityCreature {
 	}
 
 	private EntityFallingBlock createBlock(boolean trajectoryBlock) {
-		return createBlock(Main.angle, Main.power, trajectoryBlock);
+		return createBlock(Main.angle, Main.power, trajectoryBlock, Main.getColorBlock().getColor());
 	}
-	
-	private EntityFallingBlock createBlock(double angle, double power, boolean trajectoryBlock) {
+
+	private EntityFallingBlock createBlock(double angle, double power, boolean trajectoryBlock, int color) {
 		World world = this.worldObj;
 
 		EntityFallingBlock block = new EntityFallingBlock(world);
 
 		if (trajectoryBlock) {
-			block = new EntityTrajectoryBlock(world, this.posX, this.posY + 0.1, this.posZ, Blocks.air);
+			block = new EntityTrajectoryBlock(world, this.posX, this.posY + 0.1, this.posZ,
+					Main.getColorBlock().getBlock(), color);
 		} else {
 			block = new EntityFallingBlock(world, this.posX, this.posY + 0., this.posZ,
-					blocks.get((int) Math.floor(Math.random() * blocks.size())));
+					Main.getColorBlock().getBlock());
 		}
 		Vector3d initialVector = new Vector3d(Math.cos(Math.toRadians(angle)) * power,
 				Math.sin(Math.toRadians(angle)) * power, Math.cos(Math.toRadians(angle)) * power);
@@ -183,7 +186,7 @@ public class EntityCatapult extends EntityCreature {
 	private void highlightTrajectory(World world, double angle, double power) {
 		world.spawnEntityInWorld(createBlock(true));
 	}
-	
+
 	private void clearTrajectories() {
 		this.trajectories.clear();
 	}
