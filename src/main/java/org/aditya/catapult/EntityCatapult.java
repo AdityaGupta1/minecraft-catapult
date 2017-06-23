@@ -1,8 +1,10 @@
 package org.aditya.catapult;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.vecmath.Vector2d;
 import javax.vecmath.Vector3d;
 
 import net.minecraft.block.Block;
@@ -14,15 +16,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemSword;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
 
 public class EntityCatapult extends EntityCreature {
-	private boolean showTrajectory = false;
-	
-	List<Block> blocks = Arrays
-			.asList(new Block[] { Blocks.diamond_block, Blocks.gold_block, Blocks.iron_block, Blocks.emerald_block });
-
 	public EntityCatapult(World world) {
 		super(world);
 		this.setSize(2F, 1.5F);
@@ -91,12 +89,17 @@ public class EntityCatapult extends EntityCreature {
 		}
 	}
 
+	List<Block> blocks = Arrays
+			.asList(new Block[] { Blocks.diamond_block, Blocks.gold_block, Blocks.iron_block, Blocks.emerald_block });
+
+	private List<Vector2d> trajectories = new ArrayList<>();
+
 	public void onLivingUpdate() {
 		super.onLivingUpdate();
 		this.setPosition(this.lastTickPosX, this.lastTickPosY, this.lastTickPosZ);
-		
-		if (showTrajectory) {
-			this.worldObj.spawnEntityInWorld(createBlock(true));
+
+		for (Vector2d trajectory : trajectories) {
+			this.worldObj.spawnEntityInWorld(createBlock(trajectory.x, trajectory.y, true));
 		}
 	}
 
@@ -115,15 +118,24 @@ public class EntityCatapult extends EntityCreature {
 					new ChatComponentText(Main.redText + "Use \"/catapult <angle> <power>\" first!"));
 			return false;
 		}
+		
+		if (player.getHeldItem() != null && player.getHeldItem().getItem() instanceof ItemSword) {
+			clearTrajectories();
+			player.addChatComponentMessage(new ChatComponentText(Main.aquaText + "Cleared all trajectories."));
+			return true;
+		}
 
 		if (player.isSneaking()) {
-			showTrajectory = !showTrajectory;
-			if (showTrajectory) {
-				player.addChatComponentMessage(new ChatComponentText(Main.aquaText + "Now showing trajectory"));
-			} else {
-				player.addChatComponentMessage(new ChatComponentText(Main.aquaText + "No longer showing trajectory"));
+			if (trajectories.contains(new Vector2d(angle, power))) {
+				player.addChatComponentMessage(
+						new ChatComponentText(Main.redText + "This trajectory is already being shown!"));
+				return false;
 			}
-			
+
+			trajectories.add(new Vector2d(angle, power));
+			player.addChatComponentMessage(new ChatComponentText(Main.aquaText + "Added a trajectory at Angle: " + angle
+					+ ", Power: " + Math.round(Math.pow(3, Main.power))));
+
 			return true;
 		}
 
@@ -141,17 +153,18 @@ public class EntityCatapult extends EntityCreature {
 
 		return true;
 	}
-	
+
 	private EntityFallingBlock createBlock(boolean trajectoryBlock) {
+		return createBlock(Main.angle, Main.power, trajectoryBlock);
+	}
+	
+	private EntityFallingBlock createBlock(double angle, double power, boolean trajectoryBlock) {
 		World world = this.worldObj;
-		double angle = Main.angle;
-		double power = Main.power;
-		
+
 		EntityFallingBlock block = new EntityFallingBlock(world);
-		
+
 		if (trajectoryBlock) {
-			block = new EntityTrajectoryBlock(world, this.posX, this.posY + 0.1, this.posZ,
-					Blocks.air);
+			block = new EntityTrajectoryBlock(world, this.posX, this.posY + 0.1, this.posZ, Blocks.air);
 		} else {
 			block = new EntityFallingBlock(world, this.posX, this.posY + 0., this.posZ,
 					blocks.get((int) Math.floor(Math.random() * blocks.size())));
@@ -169,5 +182,9 @@ public class EntityCatapult extends EntityCreature {
 	 */
 	private void highlightTrajectory(World world, double angle, double power) {
 		world.spawnEntityInWorld(createBlock(true));
+	}
+	
+	private void clearTrajectories() {
+		this.trajectories.clear();
 	}
 }

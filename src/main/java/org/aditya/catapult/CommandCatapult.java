@@ -39,6 +39,16 @@ public class CommandCatapult implements ICommand {
 	}
 
 	@Override
+	public List addTabCompletionOptions(ICommandSender p_71516_1_, String[] p_71516_2_) {
+		return null;
+	}
+
+	@Override
+	public boolean isUsernameIndex(String[] p_82358_1_, int p_82358_2_) {
+		return false;
+	}
+
+	@Override
 	public void processCommand(ICommandSender sender, String[] args) {
 		if (args.length != 2) {
 			sender.addChatMessage(
@@ -46,13 +56,14 @@ public class CommandCatapult implements ICommand {
 							+ Main.redText + "decimal numbers using \"" + getCommandUsage(sender) + "\"."));
 			return;
 		}
-		
+
 		try {
 			Main.angle = Double.parseDouble(args[0]);
 			// log base 3 of given power
 			Main.power = Math.log(Double.parseDouble(args[1])) / Math.log(3);
 		} catch (NumberFormatException exception) {
-			// 2x Main.redText because the second line of the chat message is not colored otherwise
+			// 2x Main.redText because the second line of the chat message is
+			// not colored otherwise
 			sender.addChatMessage(
 					new ChatComponentText(Main.redText + "Invalid arguments! Specify the angle and power as "
 							+ Main.redText + "decimal numbers using \"" + getCommandUsage(sender) + "\"."));
@@ -63,8 +74,8 @@ public class CommandCatapult implements ICommand {
 			Main.parametersSet = true;
 		}
 
-		sender.addChatMessage(new ChatComponentText(EnumChatFormatting.AQUA + "" + EnumChatFormatting.BOLD + "Angle: "
-				+ Main.angle + " degrees, Power: " + Double.parseDouble(args[1])));
+		sender.addChatMessage(new ChatComponentText(
+				Main.aquaText + "Angle: " + Main.angle + " degrees, Power: " + Double.parseDouble(args[1])));
 	}
 
 	@Override
@@ -74,15 +85,4 @@ public class CommandCatapult implements ICommand {
 		}
 		return false;
 	}
-
-	@Override
-	public List addTabCompletionOptions(ICommandSender p_71516_1_, String[] p_71516_2_) {
-		return null;
-	}
-
-	@Override
-	public boolean isUsernameIndex(String[] p_82358_1_, int p_82358_2_) {
-		return false;
-	}
-
 }
