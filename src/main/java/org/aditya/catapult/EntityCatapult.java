@@ -18,6 +18,8 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
 
 public class EntityCatapult extends EntityCreature {
+	private boolean showTrajectory = false;
+	
 	List<Block> blocks = Arrays
 			.asList(new Block[] { Blocks.diamond_block, Blocks.gold_block, Blocks.iron_block, Blocks.emerald_block });
 
@@ -25,13 +27,12 @@ public class EntityCatapult extends EntityCreature {
 		super(world);
 		this.setSize(2F, 1.5F);
 	}
-	
-	protected void applyEntityAttributes()
-    {
-        super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(6.0D);
-        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0D);
-    }
+
+	protected void applyEntityAttributes() {
+		super.applyEntityAttributes();
+		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(6.0D);
+		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0D);
+	}
 
 	public boolean isAIEnabled() {
 		return false;
@@ -56,7 +57,7 @@ public class EntityCatapult extends EntityCreature {
 	protected float getSoundVolume() {
 		return 0F;
 	}
-	
+
 	private Vector3d multiplyVectors(Vector3d vector1, Vector3d vector2) {
 		return new Vector3d(vector1.x * vector2.x, vector1.y * vector2.y, vector1.z * vector2.z);
 	}
@@ -78,7 +79,7 @@ public class EntityCatapult extends EntityCreature {
 
 	@Override
 	public ItemStack[] getLastActiveItems() {
-		return new ItemStack[]{};
+		return new ItemStack[] {};
 	}
 
 	protected void dropFewItems(boolean p_70628_1_, int p_70628_2_) {
@@ -89,40 +90,49 @@ public class EntityCatapult extends EntityCreature {
 			this.dropItem(Item.getItemFromBlock(Blocks.log), 1);
 		}
 	}
-	
+
 	public void onLivingUpdate() {
 		super.onLivingUpdate();
 		this.setPosition(this.lastTickPosX, this.lastTickPosY, this.lastTickPosZ);
+		
+		if (showTrajectory) {
+			this.worldObj.spawnEntityInWorld(createBlock(true));
+		}
 	}
 
 	public boolean interact(EntityPlayer player) {
 		World world = player.getEntityWorld();
 
-		double angle = Main.angle;
-		double power = Main.power;
-
-		if (!Main.parametersSet) {
-			player.addChatComponentMessage(new ChatComponentText(Main.redText + "Use \"/catapult <angle> <power>\" first!"));
-			return false;
-		}
-
 		if (!world.isRemote) {
 			return false;
 		}
 
-		player.addChatComponentMessage(
-				new ChatComponentText(Main.aquaText + "Launching cow..."));
+		double angle = Main.angle;
+		double power = Main.power;
+
+		if (!Main.parametersSet) {
+			player.addChatComponentMessage(
+					new ChatComponentText(Main.redText + "Use \"/catapult <angle> <power>\" first!"));
+			return false;
+		}
+
+		if (player.isSneaking()) {
+			showTrajectory = !showTrajectory;
+			if (showTrajectory) {
+				player.addChatComponentMessage(new ChatComponentText(Main.aquaText + "Now showing trajectory"));
+			} else {
+				player.addChatComponentMessage(new ChatComponentText(Main.aquaText + "No longer showing trajectory"));
+			}
+			
+			return true;
+		}
+
+		player.addChatComponentMessage(new ChatComponentText(Main.aquaText + "Launching cow..."));
 
 		EntityCow cow = new EntityCow(world);
 		cow.setLocationAndAngles(this.posX, this.posY, this.posZ, 0, 0);
 
-		EntityFallingBlock block = new EntityFallingBlock(world, this.posX, this.posY, this.posZ,
-				blocks.get((int) Math.floor(Math.random() * blocks.size())));
-		Vector3d initialVector = new Vector3d(Math.cos(Math.toRadians(angle)) * power,
-				Math.sin(Math.toRadians(angle)) * power, Math.cos(Math.toRadians(angle)) * power);
-		Vector3d multiplyVector = new Vector3d(0, 1, -1);
-		Vector3d velocity = multiplyVectors(initialVector, multiplyVector);
-		block.setVelocity(velocity.x, velocity.y, velocity.z);
+		EntityFallingBlock block = createBlock(false);
 
 		cow.mountEntity(block);
 
@@ -130,5 +140,40 @@ public class EntityCatapult extends EntityCreature {
 		world.spawnEntityInWorld(cow);
 
 		return true;
+	}
+	
+	private EntityFallingBlock createBlock(boolean trajectoryBlock) {
+		World world = this.worldObj;
+		double angle = Main.angle;
+		double power = Main.power;
+		
+		EntityFallingBlock block = new EntityFallingBlock(world);
+		
+		if (trajectoryBlock) {
+			block = new EntityTrajectoryBlock(world, this.posX, this.posY, this.posZ,
+					Blocks.air);
+		} else {
+			block = new EntityFallingBlock(world, this.posX, this.posY, this.posZ,
+					blocks.get((int) Math.floor(Math.random() * blocks.size())));
+		}
+		Vector3d initialVector = new Vector3d(Math.cos(Math.toRadians(angle)) * power,
+				Math.sin(Math.toRadians(angle)) * power, Math.cos(Math.toRadians(angle)) * power);
+		Vector3d multiplyVector = new Vector3d(0, 1, -1);
+		Vector3d velocity = multiplyVectors(initialVector, multiplyVector);
+		block.setVelocity(velocity.x, velocity.y, velocity.z);
+		return block;
+	}
+
+	/*
+	 * spawns an invisible block that leaves particles to form a trail
+	 */
+	private void highlightTrajectory(World world, double angle, double power) {
+		EntityTrajectoryBlock block = new EntityTrajectoryBlock(world, this.posX, this.posY, this.posZ, Blocks.air);
+		Vector3d initialVector = new Vector3d(Math.cos(Math.toRadians(angle)) * power,
+				Math.sin(Math.toRadians(angle)) * power, Math.cos(Math.toRadians(angle)) * power);
+		Vector3d multiplyVector = new Vector3d(0, 1, -1);
+		Vector3d velocity = multiplyVectors(initialVector, multiplyVector);
+		block.setVelocity(velocity.x, velocity.y, velocity.z);
+		world.spawnEntityInWorld(block);
 	}
 }

@@ -6,26 +6,23 @@ import net.minecraft.entity.item.EntityFallingBlock;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 
 public class FallingBlockEventHandler {
-	
+
 	@SubscribeEvent
 	public void immobilizeFallingBlock(LivingUpdateEvent event) {
 		Entity entity = event.entity;
-		
+
 		if (!entity.isRiding()) {
 			return;
 		}
-		
-		if (!(entity.ridingEntity instanceof EntityFallingBlock)) {
-			return;
-		}
-		
-		EntityFallingBlock block = (EntityFallingBlock) entity.ridingEntity;
-		
-		if (!block.onGround) {
-			return;
-		}
-		
-		block.setVelocity(0, 0, 0);
-	}
 
+		Entity ridingEntity = entity.ridingEntity;
+
+		if (!ridingEntity.onGround) {
+			return;
+		}
+
+		if (ridingEntity instanceof EntityFallingBlock) {
+			ridingEntity.setVelocity(0, 0, 0);
+		}
+	}
 }
