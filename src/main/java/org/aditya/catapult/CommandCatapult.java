@@ -49,10 +49,10 @@ public class CommandCatapult implements ICommand {
 		
 		try {
 			Main.angle = Double.parseDouble(args[0]);
-			Main.power = Double.parseDouble(args[1]);
+			// log base 3 of given power
+			Main.power = Math.log(Double.parseDouble(args[1])) / Math.log(3);
 		} catch (NumberFormatException exception) {
-			// 2x Main.redText because the second line of the chat message is
-			// not colored otherwise
+			// 2x Main.redText because the second line of the chat message is not colored otherwise
 			sender.addChatMessage(
 					new ChatComponentText(Main.redText + "Invalid arguments! Specify the angle and power as "
 							+ Main.redText + "decimal numbers using \"" + getCommandUsage(sender) + "\"."));
@@ -64,7 +64,7 @@ public class CommandCatapult implements ICommand {
 		}
 
 		sender.addChatMessage(new ChatComponentText(EnumChatFormatting.AQUA + "" + EnumChatFormatting.BOLD + "Angle: "
-				+ Main.angle + " degrees, Power: " + Main.power));
+				+ Main.angle + " degrees, Power: " + Double.parseDouble(args[1])));
 	}
 
 	@Override

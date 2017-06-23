@@ -150,10 +150,10 @@ public class EntityCatapult extends EntityCreature {
 		EntityFallingBlock block = new EntityFallingBlock(world);
 		
 		if (trajectoryBlock) {
-			block = new EntityTrajectoryBlock(world, this.posX, this.posY, this.posZ,
+			block = new EntityTrajectoryBlock(world, this.posX, this.posY + 0.1, this.posZ,
 					Blocks.air);
 		} else {
-			block = new EntityFallingBlock(world, this.posX, this.posY, this.posZ,
+			block = new EntityFallingBlock(world, this.posX, this.posY + 0., this.posZ,
 					blocks.get((int) Math.floor(Math.random() * blocks.size())));
 		}
 		Vector3d initialVector = new Vector3d(Math.cos(Math.toRadians(angle)) * power,
@@ -168,12 +168,6 @@ public class EntityCatapult extends EntityCreature {
 	 * spawns an invisible block that leaves particles to form a trail
 	 */
 	private void highlightTrajectory(World world, double angle, double power) {
-		EntityTrajectoryBlock block = new EntityTrajectoryBlock(world, this.posX, this.posY, this.posZ, Blocks.air);
-		Vector3d initialVector = new Vector3d(Math.cos(Math.toRadians(angle)) * power,
-				Math.sin(Math.toRadians(angle)) * power, Math.cos(Math.toRadians(angle)) * power);
-		Vector3d multiplyVector = new Vector3d(0, 1, -1);
-		Vector3d velocity = multiplyVectors(initialVector, multiplyVector);
-		block.setVelocity(velocity.x, velocity.y, velocity.z);
-		world.spawnEntityInWorld(block);
+		world.spawnEntityInWorld(createBlock(true));
 	}
 }
