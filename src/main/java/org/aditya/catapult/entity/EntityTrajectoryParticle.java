@@ -19,7 +19,6 @@ public class EntityTrajectoryParticle extends EntityFireworkSparkFX
     private float fadeColourGreen;
     private float fadeColourBlue;
     private boolean hasFadeColour;
-    private static final String __OBFID = "CL_00000905";
 
     public EntityTrajectoryParticle(World world, double p_i1207_2_, double p_i1207_4_, double p_i1207_6_, double p_i1207_8_, double p_i1207_10_, double p_i1207_12_, EffectRenderer p_i1207_14_)
     {
