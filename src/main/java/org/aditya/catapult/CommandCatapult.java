@@ -1,5 +1,7 @@
 package org.aditya.catapult;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +32,7 @@ public class CommandCatapult implements ICommand {
 
 	@Override
 	public String getCommandUsage(ICommandSender p_71518_1_) {
-		return "/catapult <angle: number> <power: number> <color: text>";
+		return "/catapult <angle: number> <power: number> <color: text> <rotation: number>";
 	}
 
 	@Override
@@ -50,7 +52,7 @@ public class CommandCatapult implements ICommand {
 
 	@Override
 	public void processCommand(ICommandSender sender, String[] args) {
-		if (args.length != 3) {
+		if (args.length != 4) {
 			sender.addChatMessage(Main.createChatMessage("Invalid arguments! Usage: " + getCommandUsage(sender) + "\".",
 					EnumChatFormatting.RED));
 			return;
@@ -61,6 +63,7 @@ public class CommandCatapult implements ICommand {
 			Main.shownPower = Double.parseDouble(args[1]);
 			// log base 3 of given power
 			Main.power = Math.log(Main.shownPower) / Math.log(3);
+			Main.rotationAngle = Double.parseDouble(args[3]);
 		} catch (NumberFormatException exception) {
 			sender.addChatMessage(Main.createChatMessage("Invalid arguments! Usage: " + getCommandUsage(sender) + "\".",
 					EnumChatFormatting.RED));
@@ -80,9 +83,11 @@ public class CommandCatapult implements ICommand {
 			Main.parametersSet = true;
 		}
 
-		sender.addChatMessage(Main.createChatMessage(
-				"Angle: " + Main.angle + " degrees, Power: " + Double.parseDouble(args[1]) + ", Color: " + Main.color,
-				EnumChatFormatting.AQUA));
+		final NumberFormat f = new DecimalFormat("#");
+		// It's more readable this way
+		final String msg = String.format("Angle %s degrees, Power: %s, Color: %s, Rotation: %s degrees", f.format(Main.angle),
+				f.format(Main.power), Main.color, f.format(Main.rotationAngle));
+		sender.addChatMessage(Main.createChatMessage(msg, EnumChatFormatting.AQUA));
 	}
 
 	@Override

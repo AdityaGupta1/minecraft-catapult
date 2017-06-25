@@ -3,6 +3,7 @@ package org.aditya.catapult.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.vecmath.Matrix3d;
 import javax.vecmath.Vector2d;
 import javax.vecmath.Vector3d;
 
@@ -100,8 +101,8 @@ public class EntityCatapult extends EntityCreature {
 		this.setPosition(this.lastTickPosX, this.lastTickPosY, this.lastTickPosZ);
 
 		for (Trajectory trajectory : trajectories) {
-			this.worldObj.spawnEntityInWorld(
-					createBlock(trajectory.getAngle(), trajectory.getPower(), true, trajectory.getColor()));
+			this.worldObj.spawnEntityInWorld(createBlock(trajectory.getAngle(), trajectory.getPower(), true,
+					trajectory.getColor(), trajectory.getRotationAngle()));
 		}
 	}
 
@@ -128,13 +129,14 @@ public class EntityCatapult extends EntityCreature {
 		}
 
 		if (player.isSneaking()) {
-			if (trajectories.contains(new Trajectory(angle, power, Main.getColorBlock().getColor()))) {
+			if (trajectories
+					.contains(new Trajectory(angle, power, Main.getColorBlock().getColor(), Main.rotationAngle))) {
 				player.addChatComponentMessage(
 						Main.createChatMessage("This trajectory is already being shown!", EnumChatFormatting.RED));
 				return false;
 			}
 
-			trajectories.add(new Trajectory(angle, power, Main.getColorBlock().getColor()));
+			trajectories.add(new Trajectory(angle, power, Main.getColorBlock().getColor(), Main.rotationAngle));
 			player.addChatComponentMessage(Main.createChatMessage("Added a trajectory with Angle: " + angle
 					+ " degrees, Power: " + Main.shownPower + ", Color: " + Main.color, EnumChatFormatting.AQUA));
 
@@ -157,10 +159,12 @@ public class EntityCatapult extends EntityCreature {
 	}
 
 	private EntityFallingBlock createBlock(boolean trajectoryBlock) {
-		return createBlock(Main.angle, Main.power, trajectoryBlock, Main.getColorBlock().getColor());
+		return createBlock(Main.angle, Main.power, trajectoryBlock, Main.getColorBlock().getColor(),
+				Main.rotationAngle);
 	}
 
-	private EntityFallingBlock createBlock(double angle, double power, boolean trajectoryBlock, int color) {
+	private EntityFallingBlock createBlock(double angle, double power, boolean trajectoryBlock, int color,
+			double rotationAngle) {
 		World world = this.worldObj;
 
 		EntityFallingBlock block = new EntityFallingBlock(world);
@@ -172,10 +176,22 @@ public class EntityCatapult extends EntityCreature {
 			block = new EntityFallingBlock(world, this.posX, this.posY + 0., this.posZ,
 					Main.getColorBlock().getBlock());
 		}
-		Vector3d initialVector = new Vector3d(Math.cos(Math.toRadians(angle)) * power,
-				Math.sin(Math.toRadians(angle)) * power, Math.cos(Math.toRadians(angle)) * power);
-		Vector3d multiplyVector = new Vector3d(0, 1, -1);
-		Vector3d velocity = multiplyVectors(initialVector, multiplyVector);
+
+	
+		final double angleRadiant = Math.toRadians(angle);
+		final double rotRadiant = Math.toRadians(rotationAngle);
+
+		final Vector3d initialVector = new Vector3d(0, Math.sin(angleRadiant), Math.cos(angleRadiant));
+		
+		final Vector3d multiplyVector = new Vector3d(0, power, -power);
+		final Vector3d velocity = multiplyVectors(initialVector, multiplyVector);
+
+		//we use a rotation  matrix to change the angle around the Y axis
+		final Matrix3d rotationMatrix = new Matrix3d();
+		rotationMatrix.rotY(rotRadiant);
+		rotationMatrix.transform(velocity);
+
+		System.out.println("Velocity is: " + velocity);
 		block.setVelocity(velocity.x, velocity.y, velocity.z);
 		return block;
 	}
