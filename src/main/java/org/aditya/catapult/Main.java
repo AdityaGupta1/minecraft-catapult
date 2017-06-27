@@ -3,6 +3,8 @@ package org.aditya.catapult;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.vecmath.Vector3d;
+
 import org.aditya.catapult.entity.EntityCatapult;
 import org.aditya.catapult.model.RenderCatapult;
 import org.aditya.catapult.util.ColorBlock;
@@ -28,6 +30,7 @@ public class Main
     
     public static double angle = 0D;
     public static double power = 0D;
+    public static double rotationAngle = 0;
     // power shown to user, log base 3 not applied yet
     public static double shownPower = 0D;
     public static String color = "white";
