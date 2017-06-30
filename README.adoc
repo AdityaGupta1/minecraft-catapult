@@ -60,5 +60,5 @@ This is a very important step as this will confirm that you can actually start m
 . Search for `Spawn Catapult`
 . Press `T` to open your chat window
 . Right click on the ground while holding the `Spawn Catapult` to create a catapult
-. Use the command `/catapult <angle> <power>` to set the angle and power of the cow to be launched
-. Right click on the catapult to launch a cow
+. Use the command `/catapult <angle> <power> <color>` to set the angle, power, and color of the projectile to be launched
+. Right click on the catapult to launch a projectile
