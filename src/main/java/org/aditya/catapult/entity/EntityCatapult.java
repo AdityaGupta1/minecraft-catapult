@@ -191,7 +191,6 @@ public class EntityCatapult extends EntityCreature {
 		rotationMatrix.rotY(rotRadiant);
 		rotationMatrix.transform(velocity);
 
-		System.out.println("Velocity is: " + velocity);
 		block.setVelocity(velocity.x, velocity.y, velocity.z);
 		return block;
 	}

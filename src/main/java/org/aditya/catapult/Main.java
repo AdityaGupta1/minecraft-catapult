@@ -31,7 +31,7 @@ public class Main
     public static double angle = 0D;
     public static double power = 0D;
     public static double rotationAngle = 0;
-    // power shown to user, log base 3 not applied yet
+    // power shown to user, no scaling applied
     public static double shownPower = 0D;
     public static String color = "white";
     

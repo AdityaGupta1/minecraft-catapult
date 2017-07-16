@@ -62,7 +62,7 @@ public class CommandCatapult implements ICommand {
 			Main.angle = Double.parseDouble(args[0]);
 			Main.shownPower = Double.parseDouble(args[1]);
 			// log base 3 of given power
-			Main.power = Math.log(Main.shownPower) / Math.log(3);
+			Main.power = Main.shownPower / 10d;
 			Main.rotationAngle = Double.parseDouble(args[3]);
 		} catch (NumberFormatException exception) {
 			sender.addChatMessage(Main.createChatMessage("Invalid arguments! Usage: " + getCommandUsage(sender) + "\".",
