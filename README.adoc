@@ -73,7 +73,7 @@ The `master` branch contains all the functioning code, the `workshop` branch is 
 
 === Steps
 
-. Introduction
+. [[Introduction]] Introduction
 . Spawning the catapult
 . Trajectories
 . First shot
@@ -85,6 +85,7 @@ The `master` branch contains all the functioning code, the `workshop` branch is 
 === Introduction
 
 We Introduce
+
 - Java
 - Minecraft modding
 - Eclipse IDE
@@ -92,7 +93,8 @@ We Introduce
 - CERN (volunteers to give details explanation about the standard model and the Higgs boson  )
 
 === Spawning the catapult
-Let's start Minecraft by clicking on the green arrow and create a new world in **Creative Mode**
+Let's start Minecraft by clicking on the green arrow and create a new world in **Creative Mode**.
+
 When we open the inventory (press `E`) and search for catapult we cannot find anything. We need to register the new catapult entity in the main modding file.
 
 In `Main.java`
@@ -108,7 +110,7 @@ public void init(FMLInitializationEvent event)
 }
 ```
 
-now that the catapult is registered, we can restart Minecraft and repeat the operation. We can now find the egg for the catapult. Let's move it in the inventory, equip it, right click and hop we have a catapult!
+now that the catapult is registered, we can restart Minecraft and repeat the operation. We can now find the egg for the catapult. Let's move it in the inventory, equip it, right click and we have a catapult!
 
 === Trajectories
 
@@ -280,7 +282,7 @@ public void immobilizeFallingBlock(LivingUpdateEvent event) {
 }
 ```
 
-ok so now we only have ridding entities. We can then access the entity they are riding:
+ok so now we only have ridding entities. We can access the entity they are riding:
 
 ```
 Entity ridingEntity = entity.ridingEntity;
@@ -350,7 +352,7 @@ Now if we restart Minecraft we notice that the projectiles stop on impact. Yay!
 
 === Explosions
 
-Now what's the point of a catapult if you can't blow up stuff I ask you. Let's get to work.
+Now what's the point of a catapult if you can't blow stuff up I ask you. Let's get to work.
 
 We need to trigger an explosion when the falling block touches the ground. Wait... We already have a piece of code that checks that. Rather than grounding the block we could start an explosion:
 
@@ -379,3 +381,10 @@ ridingEntity.worldObj.createExplosion(ridingEntity, ridingEntity.posX, ridingEnt
 === Huge Explosions
 
 Ok that's better, but could be better right? Let's have a final look at the `createExplosion` method. The number parameter before `true/false` is the radius of the explosions. This is the number of blocks around the explosions that will be affected. Try to increase to `4`, `6`, `8` and see what happens :D
+
+=== More
+
+If time allowed we can explore the following ideas:
+
+- Start catapult from distance.
+- ???
