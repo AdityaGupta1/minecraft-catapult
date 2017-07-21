@@ -12,9 +12,11 @@ import org.aditya.catapult.Main;
 import org.aditya.catapult.util.Trajectory;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.item.EntityFallingBlock;
+import net.minecraft.entity.item.EntityTNTPrimed;
 import net.minecraft.entity.passive.EntityCow;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -146,11 +148,13 @@ public class EntityCatapult extends EntityCreature {
 		player.addChatComponentMessage(Main.createChatMessage("Launching cow...", EnumChatFormatting.AQUA));
 
 		EntityCow cow = new EntityCow(world);
+		Entity tnt = new EntityTNTPrimed(world);
 		cow.setLocationAndAngles(this.posX, this.posY, this.posZ, 0, 0);
 
 		EntityFallingBlock block = createBlock(false);
 
 		cow.mountEntity(block);
+//		tnt.mountEntity(block);
 
 		world.spawnEntityInWorld(block);
 		world.spawnEntityInWorld(cow);

@@ -1,5 +1,7 @@
 package org.aditya.catapult.util;
 
+import java.util.TimerTask;
+
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityFallingBlock;
@@ -10,10 +12,10 @@ public class FallingBlockEventHandler {
 	@SubscribeEvent
 	public void immobilizeFallingBlock(LivingUpdateEvent event) {
 		Entity entity = event.entity;
-
+		
 		if (!entity.isRiding()) {
 			return;
-		}
+		}	
 
 		Entity ridingEntity = entity.ridingEntity;
 
@@ -23,6 +25,10 @@ public class FallingBlockEventHandler {
 
 		if (ridingEntity instanceof EntityFallingBlock) {
 			ridingEntity.setVelocity(0, 0, 0);
+			System.out.println("creating explosion");
+			ridingEntity.worldObj.createExplosion(ridingEntity, ridingEntity.posX, ridingEntity.posY, ridingEntity.posZ, 5, true);
+			ridingEntity.worldObj.removeEntity(ridingEntity.riddenByEntity);
+			ridingEntity.worldObj.removeEntity(ridingEntity);
 		}
 	}
 }
