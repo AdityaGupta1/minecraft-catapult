@@ -38,7 +38,7 @@ public class EntityCatapult extends EntityCreature {
 		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(6.0D);
 		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0D);
 	}
-	
+
 	public boolean interact(EntityPlayer player) {
 		World world = player.getEntityWorld();
 
@@ -48,7 +48,6 @@ public class EntityCatapult extends EntityCreature {
 
 		double angle = Main.angle;
 		double power = Main.power;
-		
 
 		if (!Main.parametersSet) {
 			player.addChatComponentMessage(Main.createChatMessage(
@@ -62,38 +61,22 @@ public class EntityCatapult extends EntityCreature {
 			return true;
 		}
 
-		if (player.isSneaking()) {
-			if (trajectories
-					.contains(new Trajectory(angle, power, Main.getColorBlock().getColor(), Main.rotationAngle))) {
-				player.addChatComponentMessage(
-						Main.createChatMessage("This trajectory is already being shown!", EnumChatFormatting.RED));
-				return false;
-			}
-
-			trajectories.add(new Trajectory(angle, power, Main.getColorBlock().getColor(), Main.rotationAngle));
-			player.addChatComponentMessage(Main.createChatMessage("Added a trajectory with Angle: " + angle
-					+ " degrees, Power: " + Main.shownPower + ", Color: " + Main.color, EnumChatFormatting.AQUA));
-
-			return true;
+		if (trajectories.contains(new Trajectory(angle, power, Main.getColorBlock().getColor(), Main.rotationAngle))) {
+			player.addChatComponentMessage(
+					Main.createChatMessage("This trajectory is already being shown!", EnumChatFormatting.RED));
+			return false;
 		}
 
-		player.addChatComponentMessage(Main.createChatMessage("Launching cow...", EnumChatFormatting.AQUA));
-
-		EntityCow cow = new EntityCow(world);
-		cow.setLocationAndAngles(this.posX, this.posY, this.posZ, 0, 0);
-
-		EntityFallingBlock block = createBlock(false);
-
-		cow.mountEntity(block);
-
-		world.spawnEntityInWorld(block);
-		world.spawnEntityInWorld(cow);
+		trajectories.add(new Trajectory(angle, power, Main.getColorBlock().getColor(), Main.rotationAngle));
+		player.addChatComponentMessage(Main.createChatMessage("Added a trajectory with Angle: " + angle
+				+ " degrees, Power: " + Main.shownPower + ", Color: " + Main.color, EnumChatFormatting.AQUA));
 
 		return true;
+
 	}
-	
-	//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-	//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+	// -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	// -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 	public boolean isAIEnabled() {
 		return false;
@@ -164,7 +147,6 @@ public class EntityCatapult extends EntityCreature {
 		}
 	}
 
-
 	private EntityFallingBlock createBlock(boolean trajectoryBlock) {
 		return createBlock(Main.angle, Main.power, trajectoryBlock, Main.getColorBlock().getColor(),
 				Main.rotationAngle);
@@ -184,16 +166,15 @@ public class EntityCatapult extends EntityCreature {
 					Main.getColorBlock().getBlock());
 		}
 
-	
 		final double angleRadiant = Math.toRadians(angle);
 		final double rotRadiant = Math.toRadians(rotationAngle);
 
 		final Vector3d initialVector = new Vector3d(0, Math.sin(angleRadiant), Math.cos(angleRadiant));
-		
+
 		final Vector3d multiplyVector = new Vector3d(0, power, -power);
 		final Vector3d velocity = multiplyVectors(initialVector, multiplyVector);
 
-		//we use a rotation  matrix to change the angle around the Y axis
+		// we use a rotation matrix to change the angle around the Y axis
 		final Matrix3d rotationMatrix = new Matrix3d();
 		rotationMatrix.rotY(rotRadiant);
 		rotationMatrix.transform(velocity);

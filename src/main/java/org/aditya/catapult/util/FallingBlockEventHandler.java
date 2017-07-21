@@ -11,27 +11,6 @@ public class FallingBlockEventHandler {
 
 	@SubscribeEvent
 	public void immobilizeFallingBlock(LivingUpdateEvent event) {
-		Entity entity = event.entity;
-
-		if (!entity.isRiding()) {
-			return;
-		}
-
-		Entity ridingEntity = entity.ridingEntity;
-
-		if (!(ridingEntity instanceof EntityFallingBlock)) {
-			return;
-		}
-
-		if (!ridingEntity.onGround) {
-			return;
-		}
-
-//		ridingEntity.setVelocity(0, 0, 0);
-		ridingEntity.worldObj.createExplosion(ridingEntity, ridingEntity.posX, ridingEntity.posY, ridingEntity.posZ, 4,
-				true);
-		ridingEntity.worldObj.removeEntity(entity);
-		ridingEntity.worldObj.removeEntity(ridingEntity);
-
+		// TODO HERE
 	}
 }

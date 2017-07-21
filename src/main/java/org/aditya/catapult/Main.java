@@ -41,16 +41,12 @@ public class Main {
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
 		registerColors();
-		registerModEntity(EntityCatapult.class, new RenderCatapult(), "catapult",
-				EntityRegistry.findGlobalUniqueEntityId(), 0xC38751, 0xDCA556);
-
-		MinecraftForge.EVENT_BUS.register(new FallingBlockEventHandler());
-
+		// TODO HERE
 	}
 
 	@EventHandler
 	public void registerCommands(FMLServerStartingEvent event) {
-		event.registerServerCommand(new CommandCatapult());
+		// TODO HERE
 	}
 
 	public void registerModEntity(Class parEntityClass, Render render, String parEntityName, int entityId,
