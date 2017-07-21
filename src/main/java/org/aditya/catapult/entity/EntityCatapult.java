@@ -38,6 +38,62 @@ public class EntityCatapult extends EntityCreature {
 		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(6.0D);
 		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0D);
 	}
+	
+	public boolean interact(EntityPlayer player) {
+		World world = player.getEntityWorld();
+
+		if (!world.isRemote) {
+			return false;
+		}
+
+		double angle = Main.angle;
+		double power = Main.power;
+		
+
+		if (!Main.parametersSet) {
+			player.addChatComponentMessage(Main.createChatMessage(
+					"Use " + new CommandCatapult().getCommandUsage(null) + " first!", EnumChatFormatting.RED));
+			return false;
+		}
+
+		if (player.getHeldItem() != null && player.getHeldItem().getItem() instanceof ItemSword) {
+			clearTrajectories();
+			player.addChatComponentMessage(Main.createChatMessage("Cleared all trajectories", EnumChatFormatting.AQUA));
+			return true;
+		}
+
+		if (player.isSneaking()) {
+			if (trajectories
+					.contains(new Trajectory(angle, power, Main.getColorBlock().getColor(), Main.rotationAngle))) {
+				player.addChatComponentMessage(
+						Main.createChatMessage("This trajectory is already being shown!", EnumChatFormatting.RED));
+				return false;
+			}
+
+			trajectories.add(new Trajectory(angle, power, Main.getColorBlock().getColor(), Main.rotationAngle));
+			player.addChatComponentMessage(Main.createChatMessage("Added a trajectory with Angle: " + angle
+					+ " degrees, Power: " + Main.shownPower + ", Color: " + Main.color, EnumChatFormatting.AQUA));
+
+			return true;
+		}
+
+		player.addChatComponentMessage(Main.createChatMessage("Launching cow...", EnumChatFormatting.AQUA));
+
+		EntityCow cow = new EntityCow(world);
+		cow.setLocationAndAngles(this.posX, this.posY, this.posZ, 0, 0);
+
+		EntityFallingBlock block = createBlock(false);
+
+		cow.mountEntity(block);
+
+		world.spawnEntityInWorld(block);
+		world.spawnEntityInWorld(cow);
+
+		return true;
+	}
+	
+	//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 	public boolean isAIEnabled() {
 		return false;
@@ -108,59 +164,6 @@ public class EntityCatapult extends EntityCreature {
 		}
 	}
 
-	public boolean interact(EntityPlayer player) {
-		World world = player.getEntityWorld();
-
-		if (!world.isRemote) {
-			return false;
-		}
-
-		double angle = Main.angle;
-		double power = Main.power;
-
-		if (!Main.parametersSet) {
-			player.addChatComponentMessage(Main.createChatMessage(
-					"Use " + new CommandCatapult().getCommandUsage(null) + " first!", EnumChatFormatting.RED));
-			return false;
-		}
-
-		if (player.getHeldItem() != null && player.getHeldItem().getItem() instanceof ItemSword) {
-			clearTrajectories();
-			player.addChatComponentMessage(Main.createChatMessage("Cleared all trajectories", EnumChatFormatting.AQUA));
-			return true;
-		}
-
-		if (player.isSneaking()) {
-			if (trajectories
-					.contains(new Trajectory(angle, power, Main.getColorBlock().getColor(), Main.rotationAngle))) {
-				player.addChatComponentMessage(
-						Main.createChatMessage("This trajectory is already being shown!", EnumChatFormatting.RED));
-				return false;
-			}
-
-			trajectories.add(new Trajectory(angle, power, Main.getColorBlock().getColor(), Main.rotationAngle));
-			player.addChatComponentMessage(Main.createChatMessage("Added a trajectory with Angle: " + angle
-					+ " degrees, Power: " + Main.shownPower + ", Color: " + Main.color, EnumChatFormatting.AQUA));
-
-			return true;
-		}
-
-		player.addChatComponentMessage(Main.createChatMessage("Launching cow...", EnumChatFormatting.AQUA));
-
-		EntityCow cow = new EntityCow(world);
-		Entity tnt = new EntityTNTPrimed(world);
-		cow.setLocationAndAngles(this.posX, this.posY, this.posZ, 0, 0);
-
-		EntityFallingBlock block = createBlock(false);
-
-		cow.mountEntity(block);
-//		tnt.mountEntity(block);
-
-		world.spawnEntityInWorld(block);
-		world.spawnEntityInWorld(cow);
-
-		return true;
-	}
 
 	private EntityFallingBlock createBlock(boolean trajectoryBlock) {
 		return createBlock(Main.angle, Main.power, trajectoryBlock, Main.getColorBlock().getColor(),
