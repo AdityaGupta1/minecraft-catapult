@@ -41,12 +41,14 @@ public class Main {
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
 		registerColors();
-		// TODO HERE
+		registerModEntity(EntityCatapult.class, new RenderCatapult(),
+			     "catapult", EntityRegistry.findGlobalUniqueEntityId(),
+			     0xC38751, 0xDCA556);
 	}
 
 	@EventHandler
 	public void registerCommands(FMLServerStartingEvent event) {
-		// TODO HERE
+			event.registerServerCommand(new CommandCatapult());
 	}
 
 	public void registerModEntity(Class parEntityClass, Render render, String parEntityName, int entityId,
