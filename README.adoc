@@ -77,7 +77,6 @@ The `master` branch contains all the functioning code, the `workshop` branch is 
 . Spawning the catapult
 . Trajectories
 . First shot
-. Grounding the projectile
 . Explosions
 . Better Explosions
 . Huge Explosions
@@ -194,101 +193,6 @@ public boolean interact(EntityPlayer player) {
 ```
 
 Now let's try it. We need to reset the catapult after each restart: `/catapult 40 10 red 0`
-
-=== Grounding the projectile
-
-Can anyone notice the problem? When the block hits the ground it continues moving a bit. We need to fix that, it's a bug!
-
-There is already a class called `FallingBlockEventHandler.java`. We can use this class to receive update about the flying projectile. When we detect that the block touches the floor, we can ground it by setting its velocity to 0.
-
-This class will be called for all living entities in the world, so we need to make sure that we only target our flying blocks.
-
-First we start by getting the cow
-
-```
-Entity entity = event.entity;
-```
-
-This entity could be anything alive in the world. We need to filter out the ones we don't want. Let's check that the entity is riding a block using `entity.isRiding()`:
-
-```
-@SubscribeEvent
-public void immobilizeFallingBlock(LivingUpdateEvent event) {
-	Entity entity = event.entity;
-
-	if (!entity.isRiding()) {
-		return;
-	}
-}
-```
-
-ok so now we only have ridding entities. We can access the entity they are riding:
-
-```
-Entity ridingEntity = entity.ridingEntity;
-```
-
-To be 100% sure, we need to check that the entity being ridden is a flying block. In the Minecraft this is a `EntityFallingBlock`:
-
-```
-if (!(ridingEntity instanceof EntityFallingBlock)) {
-  return;
-}
-```
-
-Now we can finally check if the block has touched the ground:
-
-```
-if (!ridingEntity.onGround) {
-  return;
-}
-```
-
-Now if we have passed this moment it means have a ridding entity, ridding a block, that has touched the ground. It's time to ground it!
-
-```
-ridingEntity.setVelocity(0, 0, 0);
-```
-
-So the whole method looks like:
-
-```
-@SubscribeEvent
-public void immobilizeFallingBlock(LivingUpdateEvent event) {
-	Entity entity = event.entity;
-
-	if (!entity.isRiding()) {
-		return;
-	}
-
-	Entity ridingEntity = entity.ridingEntity;
-
-	if (!(ridingEntity instanceof EntityFallingBlock)) {
-		return;
-	}
-
-	if (!ridingEntity.onGround) {
-		return;
-	}
-
-	ridingEntity.setVelocity(0, 0, 0);
-}
-```
-
-And finally, we need to register this handler in the `Main.java` file:
-
-```
-@EventHandler
-public void init(FMLInitializationEvent event) {
-	registerColors();
-	registerModEntity(EntityCatapult.class, new RenderCatapult(), "catapult",
-			EntityRegistry.findGlobalUniqueEntityId(), 0xC38751, 0xDCA556);
-
-	MinecraftForge.EVENT_BUS.register(new FallingBlockEventHandler());
-}
-```
-
-Now if we restart Minecraft we notice that the projectiles stop on impact. Yay!
 
 === Explosions
 
