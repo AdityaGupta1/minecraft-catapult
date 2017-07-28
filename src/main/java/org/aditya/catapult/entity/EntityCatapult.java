@@ -61,16 +61,12 @@ public class EntityCatapult extends EntityCreature {
 			return true;
 		}
 
-		if (trajectories.contains(new Trajectory(angle, power, Main.getColorBlock().getColor(), Main.rotationAngle))) {
-			player.addChatComponentMessage(
-					Main.createChatMessage("This trajectory is already being shown!", EnumChatFormatting.RED));
-			return false;
+		if (!trajectories.contains(new Trajectory(angle, power, Main.getColorBlock().getColor(), Main.rotationAngle))) {
+			trajectories.add(new Trajectory(angle, power, Main.getColorBlock().getColor(), Main.rotationAngle));
+			player.addChatComponentMessage(Main.createChatMessage("Added a trajectory with Angle: " + angle
+					+ " degrees, Power: " + Main.shownPower + ", Color: " + Main.color, EnumChatFormatting.AQUA));
 		}
-
-		trajectories.add(new Trajectory(angle, power, Main.getColorBlock().getColor(), Main.rotationAngle));
-		player.addChatComponentMessage(Main.createChatMessage("Added a trajectory with Angle: " + angle
-				+ " degrees, Power: " + Main.shownPower + ", Color: " + Main.color, EnumChatFormatting.AQUA));
-
+		
 		return true;
 
 	}

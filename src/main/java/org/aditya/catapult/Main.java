@@ -49,6 +49,7 @@ public class Main {
 	@EventHandler
 	public void registerCommands(FMLServerStartingEvent event) {
 			event.registerServerCommand(new CommandCatapult());
+//			MinecraftForge.EVENT_BUS.register(new FallingBlockEventHandler());
 	}
 
 	public void registerModEntity(Class parEntityClass, Render render, String parEntityName, int entityId,
