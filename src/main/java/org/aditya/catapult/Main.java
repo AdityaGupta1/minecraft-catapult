@@ -41,9 +41,9 @@ public class Main {
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
 		registerColors();
-		registerModEntity(EntityCatapult.class, new RenderCatapult(),
-			     "catapult", EntityRegistry.findGlobalUniqueEntityId(),
-			     0xC38751, 0xDCA556);
+// 		registerModEntity(EntityCatapult.class, new RenderCatapult(),
+// 			     "catapult", EntityRegistry.findGlobalUniqueEntityId(),
+// 			     0xC38751, 0xDCA556);
 	}
 
 	@EventHandler
