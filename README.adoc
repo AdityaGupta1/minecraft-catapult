@@ -114,24 +114,11 @@ now that the catapult is registered, we can restart Minecraft and repeat the ope
 
 === Trajectories
 
-Now that have a catapult we can right click on it to show a trajectory. But we get a error message that the catapult is not setup yet. Let's try that command -> Nothing happens. We need to register it.
-
 Explain
 
 - Initial angle
 - Initial speed
 - Azimuth
-
-now we can register the `CommandCatapult` that allows to set those parameters:
-
-In `Main.java`
-
-```
-@EventHandler
-public void registerCommands(FMLServerStartingEvent event) {
-		event.registerServerCommand(new CommandCatapult());
-}
-```
 
 Now we can do `/catapult 40 10 red 0` and when we right click on the catapult we see a new trajectory
 
@@ -143,37 +130,10 @@ For a given power, what is the best angle (i.e. the one which gives the best ran
 
 Catapult are for trowing, so let's throw something. A cow? Why not?!
 
-We want to use the right click for throwing, so we need to re-assign the command for trajectory. Let's use `SHIFT + Right Click`. `SHIFT` causes the player to sneak, so we can use `player.isSneaking()` to check if the `SHIFT` key is pressed:
-
-In `EntityCatapult.java`
-
-```
-public boolean interact(EntityPlayer player) {
-
-    [...]
-
-	if (player.isSneaking()) {
-		if (trajectories
-				.contains(new Trajectory(angle, power, Main.getColorBlock().getColor(), Main.rotationAngle))) {
-			player.addChatComponentMessage(
-					Main.createChatMessage("This trajectory is already being shown!", EnumChatFormatting.RED));
-			return false;
-		}
-
-		trajectories.add(new Trajectory(angle, power, Main.getColorBlock().getColor(), Main.rotationAngle));
-		player.addChatComponentMessage(Main.createChatMessage("Added a trajectory with Angle: " + angle
-				+ " degrees, Power: " + Main.shownPower + ", Color: " + Main.color, EnumChatFormatting.AQUA));
-
-		return true;
-	}
-}
-```
-
-Now we can prepare the cow to be thrown:
+In `EntityCatapult.java` we can prepare the cow to be thrown (just before return true):
 
 ```
 EntityCow cow = new EntityCow(world);
-cow.setLocationAndAngles(this.posX, this.posY, this.posZ, 0, 0);
 ```
 
 The cow must ride on a block, so we need to prepare that block too:
@@ -190,12 +150,6 @@ world.spawnEntityInWorld(block);
 world.spawnEntityInWorld(cow);
 ```
 
-We can also show a message to notify that a cow has been thrown:
-
-```
-player.addChatComponentMessage(Main.createChatMessage("Launching cow...", EnumChatFormatting.AQUA));
-```
-
 Let's not forget to return `true` at the end of the method. The method should be
 
 ```
@@ -209,7 +163,6 @@ public boolean interact(EntityPlayer player) {
 		double angle = Main.angle;
 		double power = Main.power;
 
-
 		if (!Main.parametersSet) {
 			player.addChatComponentMessage(Main.createChatMessage(
 					"Use " + new CommandCatapult().getCommandUsage(null) + " first!", EnumChatFormatting.RED));
@@ -222,25 +175,11 @@ public boolean interact(EntityPlayer player) {
 			return true;
 		}
 
-		if (player.isSneaking()) {
-			if (trajectories
-					.contains(new Trajectory(angle, power, Main.getColorBlock().getColor(), Main.rotationAngle))) {
-				player.addChatComponentMessage(
-						Main.createChatMessage("This trajectory is already being shown!", EnumChatFormatting.RED));
-				return false;
-			}
-
+		if (!trajectories.contains(new Trajectory(angle, power, Main.getColorBlock().getColor(), Main.rotationAngle))) {
 			trajectories.add(new Trajectory(angle, power, Main.getColorBlock().getColor(), Main.rotationAngle));
 			player.addChatComponentMessage(Main.createChatMessage("Added a trajectory with Angle: " + angle
 					+ " degrees, Power: " + Main.shownPower + ", Color: " + Main.color, EnumChatFormatting.AQUA));
-
-			return true;
 		}
-
-		player.addChatComponentMessage(Main.createChatMessage("Launching cow...", EnumChatFormatting.AQUA));
-
-		EntityCow cow = new EntityCow(world);
-		cow.setLocationAndAngles(this.posX, this.posY, this.posZ, 0, 0);
 
 		EntityFallingBlock block = createBlock(false);
 
