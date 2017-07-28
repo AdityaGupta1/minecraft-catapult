@@ -181,6 +181,7 @@ public boolean interact(EntityPlayer player) {
 					+ " degrees, Power: " + Main.shownPower + ", Color: " + Main.color, EnumChatFormatting.AQUA));
 		}
 
+		EntityCow cow = new EntityCow(world);
 		EntityFallingBlock block = createBlock(false);
 
 		cow.mountEntity(block);
@@ -298,9 +299,9 @@ We need to trigger an explosion when the falling block touches the ground. Wait.
 In `FallingBlockEventHandler.java`
 
 ```
-ridingEntity.worldObj.createExplosion(ridingEntity, ridingEntity.posX, ridingEntity.posY, ridingEntity.posZ, 2, false);
-ridingEntity.worldObj.removeEntity(entity);
-ridingEntity.worldObj.removeEntity(ridingEntity);
+world.createExplosion(ridingEntity, x, y, z, 2, false);
+world.removeEntity(entity);
+world.removeEntity(ridingEntity);
 ```
 
 The first line starts an explosion on the block, using the `X`, `Y`, `Z` position of the block. We will explain the last parameters `2` and `false` later.
@@ -314,7 +315,7 @@ We have some explosions but they are a bit weak, aren't they? They actually don'
 Let's go back to the `createExplosion` method. The last parameter tells Minecraft if the explosion should destroy blocks around. Clearly it should so we need to change the `false` to `true`
 
 ```
-ridingEntity.worldObj.createExplosion(ridingEntity, ridingEntity.posX, ridingEntity.posY, ridingEntity.posZ, 2, true);
+world.createExplosion(ridingEntity, x, y, z, 2, true);
 ```
 
 === Huge Explosions
