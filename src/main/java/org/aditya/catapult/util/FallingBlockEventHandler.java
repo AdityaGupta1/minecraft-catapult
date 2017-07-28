@@ -11,6 +11,22 @@ public class FallingBlockEventHandler {
 
 	@SubscribeEvent
 	public void immobilizeFallingBlock(LivingUpdateEvent event) {
-		// TODO HERE
+		Entity entity = event.entity;
+
+		if (!entity.isRiding()) {
+			return;
+		}
+
+		Entity ridingEntity = entity.ridingEntity;
+
+		if (!(ridingEntity instanceof EntityFallingBlock)) {
+			return;
+		}
+
+		if (!ridingEntity.onGround) {
+			return;
+		}
+
+		ridingEntity.setVelocity(0, 0, 0);
 	}
 }
