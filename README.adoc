@@ -62,6 +62,7 @@ This is a very important step as this will confirm that you can actually start m
 . Right click on the ground while holding the `Spawn Catapult` to create a catapult
 . Use the command `/catapult <angle> <power> <color>` to set the angle, power, and color of the projectile to be launched
 . Right click on the catapult to launch a projectile
+. To clear trajectories, equip a Sword and right-click on the catapult
 
 == Workshop content
 
