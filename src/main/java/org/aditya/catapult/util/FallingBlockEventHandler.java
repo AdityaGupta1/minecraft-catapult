@@ -5,6 +5,7 @@ import java.util.TimerTask;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityFallingBlock;
+import net.minecraft.world.World;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 
 public class FallingBlockEventHandler {
@@ -26,12 +27,15 @@ public class FallingBlockEventHandler {
 		if (!ridingEntity.onGround) {
 			return;
 		}
+		
+		World world = ridingEntity.worldObj;
+		double x = ridingEntity.posX;
+		double y = ridingEntity.posY;
+		double z = ridingEntity.posZ;
 
-//		ridingEntity.setVelocity(0, 0, 0);
-		ridingEntity.worldObj.createExplosion(ridingEntity, ridingEntity.posX, ridingEntity.posY, ridingEntity.posZ, 4,
-				true);
-		ridingEntity.worldObj.removeEntity(entity);
-		ridingEntity.worldObj.removeEntity(ridingEntity);
-
+		ridingEntity.setVelocity(0, 0, 0);
+		world.createExplosion(ridingEntity, x, y, z, 10,true);
+		world.removeEntity(entity);
+		world.removeEntity(ridingEntity);
 	}
 }
