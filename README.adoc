@@ -40,7 +40,10 @@ A detailed video with complete installation steps on Mac is given below:
 
 video::0F7Bhswtd_w[youtube]
 
-Lastly, replace the `src` folder in the `forge-1.7.10-10.13.4.1558-1.7.10-src` folder with the `src` folder from this repository.
+=== Mac & Windows
+ . Delete the `src` folder found inside the forge folder which you have just created
+ . Click the download button to get a zip file with the starting source code
+ . Extract the `src` folder and copy into the forge folder
 
 === Verify
 
